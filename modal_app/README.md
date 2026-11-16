@@ -48,7 +48,7 @@ out = up.upscale.remote("job-id", {"image": "https://...", "scale": 2, "face_enh
 ## Setup
 
 - GPU L4, falling back to A10 and then L40S; 2 CPU, 8 GB RAM, timeout 5 min, scale to zero after 2 min
-  idle, max 2 containers (the workspace GPU limit is shared with demucs and resemble-enhance).
+  idle, no container cap of its own (shares the workspace's 10 GPUs with demucs and resemble-enhance).
 - Weights (RealESRGAN_x4plus, GFPGANv1.3, facexlib detector and parser) are baked into the image.
 - Memory snapshot: imports and the CPU model load are snapshotted; a new container restores it and only
   moves the models to the GPU.

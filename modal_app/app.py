@@ -36,8 +36,6 @@ WEIGHTS = {
     "RealESRGAN_x4plus.pth": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth",
     "GFPGANv1.3.pth": "https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth",
 }
-# workspace GPU limit (10 on Starter) is shared with demucs and resemble-enhance
-MAX_CONTAINERS = 2
 
 app = modal.App("real-esrgan")
 
@@ -96,7 +94,8 @@ image = (
     # Previews come in bursts while people upload; a cold start costs several seconds.
     # Idle time is billed (~$0.013/min on an L4).
     scaledown_window=120,
-    max_containers=MAX_CONTAINERS,
+    # No max_containers: the workspace's 10 GPUs (Starter) are shared with demucs and
+    # resemble-enhance (each capped at 5), and previews take whatever is free.
     enable_memory_snapshot=True,
 )
 class Upscaler:
