@@ -75,7 +75,11 @@ image = (
         f"mkdir -p {WEIGHTS_DIR}",
         *[f"wget -q -O {WEIGHTS_DIR}/{name} {url}" for name, url in WEIGHTS.items()],
     )
-    .env({"ESRGAN_WEIGHTS_DIR": WEIGHTS_DIR, "PYTHONPATH": "/opt/worker"})
+    # Memory snapshots keep os.environ as it was when they were taken, so a container restored
+    # from one still sees the old values of a changed Modal secret (GCS_BUCKET, GCS_PREFIX).
+    # After changing real-esrgan-config, bump SNAPSHOT_CONFIG and redeploy: that rebuilds the
+    # snapshot. (Rev 2: GCS_PREFIX moved to the bucket's short-lived previews prefix.)
+    .env({"ESRGAN_WEIGHTS_DIR": WEIGHTS_DIR, "PYTHONPATH": "/opt/worker", "SNAPSHOT_CONFIG": "2"})
     .add_local_file("modal_app/handler.py", "/opt/worker/handler.py", copy=True)
     # One CPU load bakes facexlib's face detector and parser weights into the image too, so cold
     # starts never download anything.

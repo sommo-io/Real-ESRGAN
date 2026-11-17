@@ -51,7 +51,8 @@ out = up.upscale.remote("job-id", {"image": "https://...", "scale": 2, "face_enh
   idle, no container cap of its own (shares the workspace's 10 GPUs with demucs and resemble-enhance).
 - Weights (RealESRGAN_x4plus, GFPGANv1.3, facexlib detector and parser) are baked into the image.
 - Memory snapshot: imports and the CPU model load are snapshotted; a new container restores it and only
-  moves the models to the GPU.
+  moves the models to the GPU. The snapshot keeps the environment it was taken with, so after changing
+  `real-esrgan-config` bump `SNAPSHOT_CONFIG` in `app.py` and redeploy, or containers keep the old values.
 - GCS output is configured only through Modal secrets, so no bucket names live in this public repo:
   `demucs-gcs` (`GCS_SERVICE_ACCOUNT_JSON`) and `real-esrgan-config` (`GCS_BUCKET`, `GCS_PREFIX`).
   Create the latter with `modal secret create real-esrgan-config GCS_BUCKET=<bucket> GCS_PREFIX=<prefix>`.
